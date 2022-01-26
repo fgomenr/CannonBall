@@ -1,5 +1,6 @@
 package es.felixgomezenriquez.cannonball;
 
+import java.util.Date;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -8,7 +9,6 @@ import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -22,14 +22,24 @@ public class App extends Application {
     final int TAM_SCENE_X = 640;
     final int TAM_SCENE_Y = 480;    
     Scene scene = new Scene(root, TAM_SCENE_X, TAM_SCENE_Y);
-    int bolaPosX=108;
-    int bolaPosY=390;
-    
+    //cracion y variables primera bola
+    int bolaPosX=60;
+    int bolaPosY=410;
     int velocidadBolaX=3;
+    Circle bolaCanon1 = new Circle(bolaPosX, bolaPosY, 7, Color.DARKSLATEGREY);
+
+    //creacion y variables segunda bola ARRIBA IZQ
+    int bola2PosX=182;
+    int bola2PosY=28;
+    int velocidadBola2Y=3;
+    Circle bolaCanon2 = new Circle(bola2PosX, bola2PosY, 7, Color.DARKSLATEGREY);
     
-    Circle bolaCanon = new Circle(bolaPosX, bolaPosY, 10, Color.DARKSLATEGREY);
-    
-    
+    //creacion y variables tercera bola ARRIBA IZQ
+    int bola3PosX=432;
+    int bola3PosY=28;
+    int velocidadBola3Y=3;
+    Circle bolaCanon3 = new Circle(bola3PosX, bola3PosY, 7, Color.DARKSLATEGREY);
+
     
     
     @Override
@@ -54,55 +64,34 @@ public class App extends Application {
         root.getChildren().add(bgView);
 
         //Añadimos cañon
-        Image cannon = new Image(getClass().getResourceAsStream("/images/cannon.png"));
+        Image cannon = new Image(getClass().getResourceAsStream("/images/turret.png"));
         
         ImageView cannonView = new ImageView(cannon);
+        cannonView.setFitHeight(50);
+        cannonView.setFitWidth(50);
         cannonView.setX(15);
-        cannonView.setY(380);
-        
-        
+        cannonView.setY(395);
         root.getChildren().add(cannonView);
         
         
-        crearPersonaje();
+        ImageView cannon2 = new ImageView(cannon);
+        cannon2.setFitHeight(50);
+        cannon2.setFitWidth(50);
+        cannon2.setX(150);
+        cannon2.setY(-24);
+        cannon2.setRotate(90);
+        root.getChildren().add(cannon2);
         
-        bolaCanon.setVisible(true);//CAMBIAR ESTO A FALSE PARA EL TIRO 
-        root.getChildren().add(bolaCanon);
+        ImageView cannon3 = new ImageView(cannon);
+        cannon3.setFitHeight(50);
+        cannon3.setFitWidth(50);
+        cannon3.setX(400);
+        cannon3.setY(-24);
+        cannon3.setRotate(90);
+        root.getChildren().add(cannon3);
         
-        tiroCanon();
-         
-        //TIROS DESDE ARRIBA los metes en funcion tiroCanon, contar 60 segundos
-        //para ganar o llegar al cañon
-        //Al pasar 60 segundos cambia minijuego mismo personaje
-        //Bajar el tiro ya hecho PAra poder saltarloo
-        //MAS OBSTACULOS
-        //Cambiar imagen cañon
-    
-    }
-    
-    
-    public void tiroCanon(){
-
-        Timeline tiroCanon = new Timeline(
-                new KeyFrame(Duration.seconds(0.017), (ActionEvent ae) -> {
-                    if(bolaPosX>=TAM_SCENE_X){
-                        bolaCanon.setVisible(true);
-                        bolaPosX=108;
-                    }
-                    else{
-                        bolaPosX += velocidadBolaX;
-                        bolaCanon.setCenterX(bolaPosX);
-                    }
-                })
-        );
-        tiroCanon.setCycleCount(Timeline.INDEFINITE);
-        tiroCanon.play();
-    }
-    
-    public void crearPersonaje(){
-    
-        
-        //Creamos personaje de pruebas 
+       
+           //Creamos personaje de pruebas 
         Rectangle cuerpo = new Rectangle(10, 10, 35, 40);
         cuerpo.setFill(Color.GRAY);
         Rectangle pierna1 = new Rectangle(15, 50, 10, 10);
@@ -119,7 +108,7 @@ public class App extends Application {
         brazo2_1.setFill(Color.DARKGRAY);
         Circle ojo1 = new Circle(20, 21, 2.5, Color.WHITE);
         Circle ojo2 = new Circle(35, 21, 2.5, Color.WHITE);
-
+        
         //Creamos grupo de figuras geometricas
         Group personaje = new Group();
         
@@ -135,16 +124,83 @@ public class App extends Application {
         personaje.setLayoutX(550);
         personaje.setLayoutY(380);
         //Añadimos a la escena
-        
         root.getChildren().add(personaje);
+
+        //Añadimos la primera bola de cañon a la escena
+        bolaCanon1.setVisible(false);//False para q no empieze a salir hasta q quiera
+        root.getChildren().add(bolaCanon1);
+
+        //Añadimos la segunda bola de cañon a la escena
+        bolaCanon2.setVisible(true); //cambiar a false
+        root.getChildren().add(bolaCanon2);
         
-    
-    
+        //Añadimos la segunda bola de cañon a la escena
+        bolaCanon3.setVisible(true); //cambiar a false
+        root.getChildren().add(bolaCanon3);
+        
+        tiroCanonBajo(bolaCanon1,velocidadBolaX,bolaPosX);
+        
+        tiroCanonAlto(bolaCanon2,velocidadBola2Y,bola2PosY);
+       
+        tiroCanonAlto(bolaCanon3,velocidadBola3Y,bola3PosY);
+
+        
+        //buscar como hacer contador 
+        //para ganar o llegar al cañon
+        //Al pasar 60 segundos cambia minijuego mismo personaje
+     
     }
+    
+    
+    public void tiroCanonAlto(Circle bola, double velocidad,int posicionY){
+    
+        Timeline tiroCanonAlto = new Timeline(
+                new KeyFrame(Duration.seconds(0.017), (ActionEvent ae) -> {
+                    
+                    bola.setVisible(true);
+                    
+                    if(bola2PosY>=TAM_SCENE_Y){
+                        bola.setVisible(true);
+                        bola2PosY=28;
+                    }
+                    else{
+                        bola2PosY += velocidad;
+                        bola.setCenterY(bola2PosY);
+                    }
+                })
+        );
+        tiroCanonAlto.setCycleCount(Timeline.INDEFINITE);
+        tiroCanonAlto.play();
+    }
+    
+    
+    public void tiroCanonBajo(Circle bola, double velocidad,int posicionX ){
+
+        Timeline tiroCanonBajo = new Timeline(
+                new KeyFrame(Duration.seconds(0.017), (ActionEvent ae) -> {
+                    
+                    bola.setVisible(true);
+                    
+                    if(bolaPosX>=TAM_SCENE_X){
+                        bola.setVisible(true);
+                        bolaPosX=posicionX;
+                        
+                    }
+                    else{
+                        bolaPosX += velocidad;
+                        bola.setCenterX(bolaPosX);
+                    }
+                })
+        );
+        tiroCanonBajo.setCycleCount(Timeline.INDEFINITE);
+        tiroCanonBajo.play();
+    }
+    
+    
     
     public static void main(String[] args) {
         launch();
         
     }
     
-}
+} 
