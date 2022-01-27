@@ -1,6 +1,6 @@
 package es.felixgomezenriquez.cannonball;
 
-import java.util.Date;
+import java.util.Random;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -39,11 +39,16 @@ public class App extends Application {
     int bola3PosY=28;
     int velocidadBola3Y=3;
     Circle bolaCanon3 = new Circle(bola3PosX, bola3PosY, 7, Color.DARKSLATEGREY);
+    
+    //Variable de control
+    int escenaNum=0;    
+    Random r=new Random();
+
 
     
     
     @Override
-    public void start(Stage stage) {
+    public void start(Stage stage) throws InterruptedException {
         
         stage.setTitle("CannonBall");
         scene.setFill(Color.BLACK);
@@ -144,12 +149,75 @@ public class App extends Application {
        
         tiroCanonAlto(bolaCanon3,velocidadBola3Y,bola3PosY);
 
+        cambioEscena();
         
-        //buscar como hacer contador 
+        
+        if(escenaNum==1){
+        
+        
+        //Hacer metodo escenas?¿?¿?¿¿?¿?
+        
+        }
+        
+        
+        
+        
+        
         //para ganar o llegar al cañon
         //Al pasar 60 segundos cambia minijuego mismo personaje
      
     }
+    
+    
+    
+    public void cambioEscena(){
+        
+        Timeline cambioEscena = new Timeline(
+                new KeyFrame(Duration.seconds(1), (ActionEvent ae) -> {
+                    
+                    int randNum=r.nextInt(2);
+                    
+                    
+                    switch (randNum){
+                        case 0: 
+                            escenaNum=0;
+                            break;
+                        
+                        
+                        case 1:
+                            escenaNum=1;
+                            break;
+                    }
+                    
+                
+                            
+                    /*  PUEDE SER Q CAMBIE A IF PARA MAS EXACTITUD      
+                    
+                    //Variable de control aleatorio entre 1 y 2 
+                    //en funcion a esa variable elegir un escenario o otro
+                    */
+                    System.out.println("Han pasado 30 s"); 
+                    System.out.println(randNum);
+                    System.out.println(escenaNum);
+            })
+        );
+        cambioEscena.setCycleCount(Timeline.INDEFINITE);
+        cambioEscena.play();
+    }
+    
+    
+    
+    public static void main(String[] args) {
+        launch();
+        
+    }
+    
+    
+    
+    
+    
+    
+    
     
     
     public void tiroCanonAlto(Circle bola, double velocidad,int posicionY){
@@ -197,10 +265,5 @@ public class App extends Application {
     }
     
     
-    
-    public static void main(String[] args) {
-        launch();
-        
-    }
     
 } 
