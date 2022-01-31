@@ -175,13 +175,9 @@ public class App extends Application {
                     
                         velocidadPersonajeY=0;
                         personajeY=380;
-                        
                     }
                     
                     //SaltoREALIZADO qUEDA CONTRLAR LIMITES EJE X
-                    
-                    
-
                     
                     System.out.println(personajeY);
 
@@ -230,28 +226,6 @@ public class App extends Application {
         movimientoPersonaje.setCycleCount(Timeline.INDEFINITE);
         movimientoPersonaje.play();
 
-
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
-        
         
         /*
         cambioEscena();
