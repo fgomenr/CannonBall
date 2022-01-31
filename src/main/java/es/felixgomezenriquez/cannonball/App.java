@@ -164,6 +164,26 @@ public class App extends Application {
         //Movimiento del personaje
              Timeline movimientoPersonaje = new Timeline(
                 new KeyFrame(Duration.seconds(0.017), (ActionEvent ae) -> {
+                    
+                    
+                                                        
+                    if (personajeY<=315){
+                        
+                        velocidadPersonajeY=2;
+                    
+                    } else if (personajeY>380){
+                    
+                        velocidadPersonajeY=0;
+                        personajeY=380;
+                        
+                    }
+                    
+                    //SaltoREALIZADO qUEDA CONTRLAR LIMITES EJE X
+                    
+                    
+
+                    
+                    System.out.println(personajeY);
 
                     personajeY += velocidadPersonajeY;
                     personaje.setLayoutY(personajeY);
@@ -171,53 +191,37 @@ public class App extends Application {
                     personajeX += velocidadPersonajeX;
                     personaje.setLayoutX(personajeX);
 
-                    scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
-                        @Override
-                        public void handle(KeyEvent event) {
-                            switch (event.getCode()) {
-
-                                case UP:
-                                    velocidadPersonajeY=-2;
-                                    
-                                    if (personajeY <= 330) {
-                                        velocidadPersonajeY =2 ;
-                                    } 
-                                    
-                                    System.out.println(personajeY);
-
-                                    break;
-                                case RIGHT:
-                                    velocidadPersonajeX = 3;
-                                    personajeX += velocidadPersonajeX;
-                                    break;
-
-                                case LEFT:
-                                    velocidadPersonajeX = -3;
-
-                                    break;
-                            }
-
+                    scene.setOnKeyPressed((KeyEvent event) -> {
+                        switch (event.getCode()) {
+                            
+                            case UP:
+                                velocidadPersonajeY=-2;
+                                
+                                break;
+                            case RIGHT:
+                                velocidadPersonajeX = 3;
+                                personajeX += velocidadPersonajeX;
+                                break;
+                                
+                            case LEFT:
+                                velocidadPersonajeX = -3;
+                                
+                                break;
                         }
                     });
 
-                    scene.setOnKeyReleased(new EventHandler<KeyEvent>() {
-                        @Override
-                        public void handle(KeyEvent event) {
-                            switch (event.getCode()) {
-
+                    scene.setOnKeyReleased((KeyEvent event) -> {
+                        switch (event.getCode()) {
+                            
+                            case RIGHT:
+                                velocidadPersonajeX = 0;
+                                personajeX += velocidadPersonajeX;
+                                break;
                                 
-                                 
-                                case RIGHT:
-                                    velocidadPersonajeX = 0;
-                                    personajeX += velocidadPersonajeX;
-                                    break;
-
-                                case LEFT:
-                                    velocidadPersonajeX = 0;
-
-                                    break;
-                            }
-
+                            case LEFT:
+                                velocidadPersonajeX = 0;
+                                
+                                break;
                         }
                     });
 
