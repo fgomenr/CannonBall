@@ -5,10 +5,12 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.scene.Group;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
@@ -43,14 +45,17 @@ public class App extends Application {
     //Variable de control
     int escenaNum=0;    
     Random r=new Random();
-
-
     
+    //Variables personaje
+    int personajeX=550;
+    int personajeY=380;
+    int velocidadPersonajeX;
+    int velocidadPersonajeY;
     
     @Override
     public void start(Stage stage) throws InterruptedException {
         
-        stage.setTitle("CannonBall");
+        stage.setTitle("CannonBallRun");
         scene.setFill(Color.BLACK);
         stage.setScene(scene);
         
@@ -96,7 +101,11 @@ public class App extends Application {
         root.getChildren().add(cannon3);
         
        
-           //Creamos personaje de pruebas 
+        //Creamos personaje y variables
+        
+        
+        
+        
         Rectangle cuerpo = new Rectangle(10, 10, 35, 40);
         cuerpo.setFill(Color.GRAY);
         Rectangle pierna1 = new Rectangle(15, 50, 10, 10);
@@ -126,11 +135,12 @@ public class App extends Application {
         personaje.getChildren().add(brazo2_1);
         personaje.getChildren().add(ojo1);
         personaje.getChildren().add(ojo2);
-        personaje.setLayoutX(550);
-        personaje.setLayoutY(380);
+        personaje.setLayoutX(personajeX);
+        personaje.setLayoutY(personajeY);
         //Añadimos a la escena
         root.getChildren().add(personaje);
 
+        
         //Añadimos la primera bola de cañon a la escena
         bolaCanon1.setVisible(false);//False para q no empieze a salir hasta q quiera
         root.getChildren().add(bolaCanon1);
@@ -148,24 +158,120 @@ public class App extends Application {
         tiroCanonAlto(bolaCanon2,velocidadBola2Y,bola2PosY);
        
         tiroCanonAlto(bolaCanon3,velocidadBola3Y,bola3PosY);
+        
+        
+        
+        //Movimiento del personaje
+             Timeline movimientoPersonaje = new Timeline(
+                new KeyFrame(Duration.seconds(0.017), (ActionEvent ae) -> {
 
+                    personajeY += velocidadPersonajeY;
+                    personaje.setLayoutY(personajeY);
+
+                    personajeX += velocidadPersonajeX;
+                    personaje.setLayoutX(personajeX);
+
+                    scene.setOnKeyPressed(new EventHandler<KeyEvent>() {
+                        @Override
+                        public void handle(KeyEvent event) {
+                            switch (event.getCode()) {
+
+                                case UP:
+                                    velocidadPersonajeY=-2;
+                                    
+                                    if (personajeY <= 330) {
+                                        velocidadPersonajeY =2 ;
+                                    } 
+                                    
+                                    System.out.println(personajeY);
+
+                                    break;
+                                case RIGHT:
+                                    velocidadPersonajeX = 3;
+                                    personajeX += velocidadPersonajeX;
+                                    break;
+
+                                case LEFT:
+                                    velocidadPersonajeX = -3;
+
+                                    break;
+                            }
+
+                        }
+                    });
+
+                    scene.setOnKeyReleased(new EventHandler<KeyEvent>() {
+                        @Override
+                        public void handle(KeyEvent event) {
+                            switch (event.getCode()) {
+
+                                
+                                 
+                                case RIGHT:
+                                    velocidadPersonajeX = 0;
+                                    personajeX += velocidadPersonajeX;
+                                    break;
+
+                                case LEFT:
+                                    velocidadPersonajeX = 0;
+
+                                    break;
+                            }
+
+                        }
+                    });
+
+                })
+        );
+        movimientoPersonaje.setCycleCount(Timeline.INDEFINITE);
+        movimientoPersonaje.play();
+
+
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        /*
         cambioEscena();
         
-        
+       
         if(escenaNum==1){
         
-        
-        //Hacer metodo escenas?¿?¿?¿¿?¿?
+            System.out.println("ESCENA 1");
+            //Hacer metodo escenas?¿?¿?¿¿?¿?
         
         }
         
+        if (escenaNum==2){
+            
+            System.out.println("ESCENA 2");
         
         
-        
-        
+        }
+   
         //para ganar o llegar al cañon
         //Al pasar 60 segundos cambia minijuego mismo personaje
-     
+        
+        */
+        
     }
     
     
@@ -191,10 +297,10 @@ public class App extends Application {
                     
                 
                             
-                    /*  PUEDE SER Q CAMBIE A IF PARA MAS EXACTITUD      
+                    /*       
                     
-                    //Variable de control aleatorio entre 1 y 2 
-                    //en funcion a esa variable elegir un escenario o otro
+                    Variable de control aleatorio entre 1 y 2 
+                    en funcion a esa variable elegir un escenario o otro
                     */
                     System.out.println("Han pasado 30 s"); 
                     System.out.println(randNum);
@@ -220,7 +326,7 @@ public class App extends Application {
     
     
     
-    public void tiroCanonAlto(Circle bola, double velocidad,int posicionY){
+    private void tiroCanonAlto(Circle bola, double velocidad,int posicionY){
     
         Timeline tiroCanonAlto = new Timeline(
                 new KeyFrame(Duration.seconds(0.017), (ActionEvent ae) -> {
@@ -242,7 +348,7 @@ public class App extends Application {
     }
     
     
-    public void tiroCanonBajo(Circle bola, double velocidad,int posicionX ){
+    private void tiroCanonBajo(Circle bola, double velocidad,int posicionX ){
 
         Timeline tiroCanonBajo = new Timeline(
                 new KeyFrame(Duration.seconds(0.017), (ActionEvent ae) -> {
