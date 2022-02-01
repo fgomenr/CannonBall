@@ -153,12 +153,13 @@ public class App extends Application {
         bolaCanon3.setVisible(true); //cambiar a false
         root.getChildren().add(bolaCanon3);
         
+        //Lamamos al metodo previamente creado que realiza la funcion de disparo horizontal
         tiroCanonBajo(bolaCanon1,velocidadBolaX,bolaPosX);
         
-        tiroCanonAlto(bolaCanon2,velocidadBola2Y,bola2PosY);
-       
-        tiroCanonAlto(bolaCanon3,velocidadBola3Y,bola3PosY);
-        
+        //Lamamos al metodo previamente creado que realiza la funcion de disparo vertical
+        tiroCanonAlto(bolaCanon2,velocidadBola2Y);
+       //Lamamos al metodo previamente creado que realiza la funcion de disparo vertical
+        tiroCanonAlto(bolaCanon3,velocidadBola3Y);
         
         
         //Movimiento del personaje
@@ -177,20 +178,36 @@ public class App extends Application {
                         personajeY=380;
                     }
                     
+                    if (personajeX<=0) {
+                        
+                        velocidadPersonajeX=0;
+                        personajeX=0;
+                    } else if(personajeX>=630){
+                        velocidadPersonajeX=0;
+                        personajeX=610;
+                    
+                    }
                     //SaltoREALIZADO qUEDA CONTRLAR LIMITES EJE X
                     
                     System.out.println(personajeY);
+                    System.out.println(personajeX);
+
 
                     personajeY += velocidadPersonajeY;
                     personaje.setLayoutY(personajeY);
 
                     personajeX += velocidadPersonajeX;
                     personaje.setLayoutX(personajeX);
-
+                    
+                    
                     scene.setOnKeyPressed((KeyEvent event) -> {
                         switch (event.getCode()) {
                             
                             case UP:
+                                
+                                if(velocidadPersonajeY==2){
+                                break;
+                                }
                                 velocidadPersonajeY=-2;
                                 
                                 break;
@@ -227,6 +244,11 @@ public class App extends Application {
         movimientoPersonaje.play();
 
         
+
+
+        //AHCER LAS COLISIONES CON LAS BOLAS 123 y ver si añadir mas bolas
+        
+        
         /*
         cambioEscena();
         
@@ -257,7 +279,7 @@ public class App extends Application {
     public void cambioEscena(){
         
         Timeline cambioEscena = new Timeline(
-                new KeyFrame(Duration.seconds(1), (ActionEvent ae) -> {
+                new KeyFrame(Duration.seconds(30), (ActionEvent ae) -> {
                     
                     int randNum=r.nextInt(2);
                     
@@ -304,7 +326,7 @@ public class App extends Application {
     
     
     
-    private void tiroCanonAlto(Circle bola, double velocidad,int posicionY){
+    private void tiroCanonAlto(Circle bola, double velocidad){
     
         Timeline tiroCanonAlto = new Timeline(
                 new KeyFrame(Duration.seconds(0.017), (ActionEvent ae) -> {
