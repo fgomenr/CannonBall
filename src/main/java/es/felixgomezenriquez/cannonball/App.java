@@ -1,6 +1,5 @@
 package es.felixgomezenriquez.cannonball;
 
-import java.util.Random;
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -28,33 +27,39 @@ public class App extends Application {
     final int TAM_SCENE_X = 640;
     final int TAM_SCENE_Y = 480;
     Scene scene = new Scene(root, TAM_SCENE_X, TAM_SCENE_Y);
+    
     //cracion y variables primera bola
     int bolaPosX = 60;
     int bolaPosY = 410;
     int velocidadBolaX = 3;
     Circle bolaCanon1 = new Circle(bolaPosX, bolaPosY, 7, Color.DARKSLATEGREY);
 
-    //creacion y variables segunda bola ARRIBA IZQ
+    //creacion y variables segunda bola 
     int bola2PosX = 182;
     int bola2PosY = 28;
     int velocidadBola2Y = 3;
     Circle bolaCanon2 = new Circle(bola2PosX, bola2PosY, 7, Color.DARKSLATEGREY);
 
-    //creacion y variables tercera bola ARRIBA IZQ
+    //creacion y variables tercera bola
     int bola3PosX = 432;
     int bola3PosY = 28;
     int velocidadBola3Y = 3;
     Circle bolaCanon3 = new Circle(bola3PosX, bola3PosY, 7, Color.DARKSLATEGREY);
-
-    //Variable de control
-    int escenaNum = 0;
-    Random r = new Random();
 
     //Variables personaje
     int personajeX = 550;
     int personajeY = 380;
     int velocidadPersonajeX;
     int velocidadPersonajeY;
+                              
+    int numVidasActual=3;
+    
+    
+    
+    
+    
+                            
+
 
     @Override
     public void start(Stage stage) throws InterruptedException {
@@ -121,18 +126,23 @@ public class App extends Application {
         vidasView[1].setX(575);
         vidasView[2].setX(600);
         
+        
+
+        
         //Creamos layout para las vidas
         HBox layoutVidas = new HBox();
         layoutVidas.setTranslateY(45);
         layoutVidas.setTranslateX(535);
         root.getChildren().add(layoutVidas);
         
+
         Text numVidas = new Text("Vidas: 3");
         numVidas.setFont(Font.font(24));
         numVidas.setFill(Color.CORAL);
-
+        
         //Anadimos los textos a los layouts
         layoutVidas.getChildren().add(numVidas);
+      
         
         
         
@@ -186,10 +196,12 @@ public class App extends Application {
         Circle ojo1 = new Circle(20, 21, 2.5, Color.WHITE);
         Circle ojo2 = new Circle(35, 21, 2.5, Color.WHITE);
         
+        
         //Creamos Rectangulo para hacer colisiones con las bolas
         
-        Rectangle colisionJugador = new Rectangle(10, 10, 35, 40);
-        colisionJugador.setFill(Color.GRAY);
+        Rectangle colisionJugador = new Rectangle(10, 10, 35, 45);
+        colisionJugador.setFill(Color.BLUE);
+        colisionJugador.setVisible(false);
         
         
         //Creamos grupo de figuras geometricas
@@ -206,6 +218,7 @@ public class App extends Application {
         personaje.getChildren().add(ojo2);
         personaje.setLayoutX(personajeX);
         personaje.setLayoutY(personajeY);
+        personaje.getChildren().add(colisionJugador);
         //Añadimos a la escena
         root.getChildren().add(personaje);
 
@@ -214,13 +227,18 @@ public class App extends Application {
         root.getChildren().add(bolaCanon1);
 
         //Añadimos la segunda bola de cañon a la escena
-        bolaCanon2.setVisible(true); //cambiar a false
+        bolaCanon2.setVisible(false); //cambiar a false
         root.getChildren().add(bolaCanon2);
 
         //Añadimos la segunda bola de cañon a la escena
-        bolaCanon3.setVisible(true); //cambiar a false
+        bolaCanon3.setVisible(false); //cambiar a false
         root.getChildren().add(bolaCanon3);
 
+        
+        
+        
+  //HACER QUE EL JUEGO EMPIEZE CUANDO PULSEMOS LA TECLA ESPACIO
+  
         //Lamamos al metodo previamente creado que realiza la funcion de disparo horizontal
         tiroCanonBajo(bolaCanon1, velocidadBolaX, bolaPosX);
 
@@ -233,7 +251,6 @@ public class App extends Application {
         Timeline movimientoPersonaje = new Timeline(
                 new KeyFrame(Duration.seconds(0.017), (ActionEvent ae) -> {
 
-                    System.out.println(bolaCanon2.getCenterY());
 
                     if (personajeY <= 315) {
 
@@ -255,8 +272,8 @@ public class App extends Application {
 
                     }
                     
-                    System.out.println(personajeY);
-                    System.out.println(personajeX);
+                    System.out.println("Esta es la Y del personaje:"+personajeY);
+                    System.out.println("Esta es la X del personaje:"+personajeX);
 
                     personajeY += velocidadPersonajeY;
                     personaje.setLayoutY(personajeY);
@@ -308,12 +325,115 @@ public class App extends Application {
         movimientoPersonaje.play();
 
         //Timeline colisiones 
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        //PONER TIMELINE CAÑONALTO SIN METODOS NI NA DA PROBLEMAS CON LAS COLISIOONES 
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
+        
         Timeline detectarColisiones = new Timeline(
                 new KeyFrame(Duration.seconds(0.017), (ActionEvent ae) -> {
-                    
-                    Shape shapeColision = Shape.intersect(bolaCanon1, );
 
-                    boolean colisionVacia = shapeColision.getBoundsInLocal().isEmpty();
+                    Shape colisionBola1 = Shape.intersect(bolaCanon1, colisionJugador);
+
+                    boolean colisionVaciaBola1 = colisionBola1.getBoundsInLocal().isEmpty();
+
+                    if (colisionVaciaBola1 == false) {
+                        System.out.println("HA chocado con bola 1");
+                        if (this.numVidasActual==3) {
+                            numVidas.setText("Vidas: 2");
+                            this.numVidasActual--;
+                            bolaCanon1.setCenterX(60);
+                            bolaPosX=60;
+                            
+                        } else if (this.numVidasActual==2){
+                            numVidas.setText("Vidas: 1");
+                            this.numVidasActual--;
+                            bolaCanon1.setCenterX(60);//Movemos bola para evitar multiples contactos
+                            bolaPosX=60;
+                            
+                        } else if (this.numVidasActual<=1){//NUMERO DE VIDAS 0
+                            numVidas.setText("Vidas: 0");
+                            this.numVidasActual=0;
+                            bolaCanon1.setCenterX(60);
+                            bolaPosX=60;
+                        }
+                   
+                        //Meter condiciones si choca cn la bola q pasa
+                        
+                    }
+
+                    Shape colisionBola2 = Shape.intersect(bolaCanon2, colisionJugador);
+
+                    boolean colisionVaciaBola2 = colisionBola2.getBoundsInLocal().isEmpty();
+
+                    if (colisionVaciaBola2 == false) {
+                        System.out.println("Ha chocado con bola 2");
+                        if (this.numVidasActual==3) {
+                            numVidas.setText("Vidas: 2");
+                            this.numVidasActual--;
+                            bolaCanon2.setCenterY(28);
+                            bola2PosY=28;
+                        } else if (this.numVidasActual==2){
+                            numVidas.setText("Vidas: 1");
+                            this.numVidasActual--;
+                            bolaCanon2.setCenterY(28);
+                            bola2PosY=28;
+                        } else if (this.numVidasActual<=1){
+                            numVidas.setText("Vidas: 0");
+                            this.numVidasActual=0;
+                            bolaCanon2.setCenterY(28);
+                            bola2PosY=28;
+                        }
+                    }
+
+                    Shape colisionBola3 = Shape.intersect(bolaCanon3, colisionJugador);
+
+                    boolean colisionVaciaBola3 = colisionBola3.getBoundsInLocal().isEmpty();
+
+                    if (colisionVaciaBola3 == false) {
+                        System.out.println("Ha chocado con bola 3");
+                        if (this.numVidasActual==3) {
+                            numVidas.setText("Vidas: 2");
+                            this.numVidasActual--;
+                            bolaCanon3.setCenterY(28);
+                            bola2PosY=28;
+                        } else if (this.numVidasActual==2){
+                            numVidas.setText("Vidas: 1");
+                            this.numVidasActual--;
+                            bolaCanon3.setCenterY(28);
+                            bola2PosY=28;
+                        } else if (this.numVidasActual<=1){
+                            numVidas.setText("Vidas: 0");
+                            this.numVidasActual=0;
+                            bolaCanon3.setCenterY(28);
+                            bola2PosY=28;
+                        }                    
+                        
+                    }
                 })
         );
 
@@ -331,37 +451,7 @@ public class App extends Application {
         
         
     }
-
-    public void cambioEscena() {
-
-        Timeline cambioEscena = new Timeline(
-                new KeyFrame(Duration.seconds(30), (ActionEvent ae) -> {
-
-                    int randNum = r.nextInt(2);
-
-                    switch (randNum) {
-                        case 0:
-                            escenaNum = 0;
-                            break;
-
-                        case 1:
-                            escenaNum = 1;
-                            break;
-                    }
-
-                    /*       
-                    
-                    Variable de control aleatorio entre 1 y 2 
-                    en funcion a esa variable elegir un escenario o otro
-                     */
-                    System.out.println("Han pasado 30 s");
-                    System.out.println(randNum);
-                    System.out.println(escenaNum);
-                })
-        );
-        cambioEscena.setCycleCount(Timeline.INDEFINITE);
-        cambioEscena.play();
-    }
+    
 
     public static void main(String[] args) {
         launch();
