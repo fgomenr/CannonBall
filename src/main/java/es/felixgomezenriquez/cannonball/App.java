@@ -1,17 +1,16 @@
 package es.felixgomezenriquez.cannonball;
 
+
+
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
-import static javafx.geometry.HPos.LEFT;
 import javafx.scene.Group;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.input.KeyEvent;
-import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
 import javafx.scene.paint.Color;
@@ -23,7 +22,11 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
+
 public class App extends Application {
+    
+    //La mayoria de variables declaradas aqui son para su posterior uso dentro del timeline
+
 
     Pane root = new Pane();
     final int TAM_SCENE_X = 640;
@@ -62,7 +65,6 @@ public class App extends Application {
 
 
     //Añadimos vidas a la pantalla 
-    //Colocamos aqui para poder usarlo dentro del timeline 
     Image vidas = new Image(getClass().getResourceAsStream("/images/Heart.png"));
 
     ImageView vidasView[] = new ImageView[3];
@@ -71,18 +73,21 @@ public class App extends Application {
     
     boolean controlVictoria;
     
+    //Creamos layout de vitoria
+    
     HBox layoutGanado = new HBox();
+    
+    //Creamos layout de derrota
     
     HBox layoutPerdido = new HBox();
 
 
-    
-    
-    
 
     @Override
     public void start(Stage stage) throws InterruptedException {
-
+        
+        
+        
         stage.setTitle("CannonBallRun");
         scene.setFill(Color.BLACK);
         stage.setScene(scene);
@@ -90,6 +95,7 @@ public class App extends Application {
         stage.show();
 
         //Añadimos imagenes a la pantalla
+        
         //Añadimos fondo
         Image backGround = new Image(getClass().getResourceAsStream("/images/full-background.png"));
 
@@ -100,10 +106,26 @@ public class App extends Application {
         bgView.setFitWidth(1000);
 
         root.getChildren().add(bgView);
+        
+        
+        //Añadimos la flecha que indica el camino a seguir
+        
+        Image flecha = new Image(getClass().getResourceAsStream("/images/rodyk.png"));
+        
+        ImageView flechaView = new ImageView(flecha);
+        flechaView.setFitHeight(50);
+        flechaView.setFitWidth(50);
+        flechaView.setX(15);
+        flechaView.setY(230);
+        flechaView.setRotate(180);
+        root.getChildren().add(flechaView);
+        
+        
 
         //Añadimos cañones 
+        
         Image cannon = new Image(getClass().getResourceAsStream("/images/turret.png"));
-
+        
         ImageView cannonView = new ImageView(cannon);
         cannonView.setFitHeight(50);
         cannonView.setFitWidth(50);
@@ -126,6 +148,8 @@ public class App extends Application {
         cannon3.setY(-24);
         cannon3.setRotate(90);
         root.getChildren().add(cannon3);
+        
+        //Añadimos las vidas 
 
         for (int i = 0; i <= 2; i++) {
 
@@ -151,7 +175,7 @@ public class App extends Application {
         reset.setFont(Font.font(15));
         reset.setFill(Color.rgb(208, 136, 0));
         
-        //Anadimos los textos a los layouts
+        //Anadimos los textos al layout
         layoutReset.getChildren().add(reset);
         
         
@@ -165,7 +189,7 @@ public class App extends Application {
         numVidas.setFont(Font.font(24));
         numVidas.setFill(Color.rgb(208, 136, 0));
 
-        //Anadimos los textos a los layouts
+        //Anadimos los textos al layout
         layoutVidas.getChildren().add(numVidas);
         
         
@@ -180,7 +204,7 @@ public class App extends Application {
         hasGanado.setFont(Font.font(50));
         hasGanado.setFill(Color.rgb(114, 227, 83));
 
-        //Anadimos los textos a los layouts
+        //Anadimos los textos al layout
         layoutGanado.getChildren().add(hasGanado);
 
         //Creamos layout para HAS PERDIDO
@@ -193,10 +217,14 @@ public class App extends Application {
         hasPerdido.setFont(Font.font(50));
         hasPerdido.setFill(Color.DARKCYAN);
 
-        //Anadimos los textos a los layouts
+        //Anadimos los textos al layout
         layoutPerdido.getChildren().add(hasPerdido);
-
-        //Creamos personaje y variables
+        
+        
+        
+        //Creamos personaje
+        
+        
         Rectangle cuerpo = new Rectangle(10, 10, 35, 40);
         cuerpo.setFill(Color.GRAY);
         Rectangle pierna1 = new Rectangle(15, 50, 10, 10);
@@ -213,16 +241,19 @@ public class App extends Application {
         brazo2_1.setFill(Color.DARKGRAY);
         Circle ojo1 = new Circle(20, 21, 2.5, Color.WHITE);
         Circle ojo2 = new Circle(35, 21, 2.5, Color.WHITE);
+        
+        
 
         //Creamos Rectangulo para hacer colisiones con las bolas
         Rectangle colisionJugador = new Rectangle(10, 10, 35, 45);
         colisionJugador.setFill(Color.BLUE);
         colisionJugador.setVisible(false);
+        
 
         //Creamos Rectangulo para hacer colision al final de la partida
         Rectangle colisionFinJuego = new Rectangle(-15, 380, 50, 45);
         colisionFinJuego.setFill(Color.BLUE);
-        colisionFinJuego.setVisible(true);
+        colisionFinJuego.setVisible(false);
         root.getChildren().add(colisionFinJuego);
 
         //Creamos grupo de figuras geometricas
@@ -240,6 +271,7 @@ public class App extends Application {
         personaje.setLayoutX(personajeX);
         personaje.setLayoutY(personajeY);
         personaje.getChildren().add(colisionJugador);
+        
         //Añadimos a la escena
         root.getChildren().add(personaje);
 
@@ -255,16 +287,17 @@ public class App extends Application {
         bolaCanon3.setVisible(true);
         root.getChildren().add(bolaCanon3);
 
-        //HACER QUE EL JUEGO EMPIEZE CUANDO PULSEMOS LA TECLA ESPACIO
         
 
+        
         //Timeline encargado del tiro de los cañones 
+        
+        
         
         Timeline tiroCanon = new Timeline(
                 new KeyFrame(Duration.seconds(0.017), (ActionEvent ae) -> {
                     
                     if (bolaPosX >= TAM_SCENE_X) {
-                        bolaCanon1.setVisible(true);
                         bolaPosX = 60;
 
                     } else {
@@ -274,7 +307,6 @@ public class App extends Application {
                     
                     
                     if (bolaCanon2.getCenterY() >= TAM_SCENE_Y) {
-                        bolaCanon2.setVisible(true);
                         bolaCanon2.setCenterY(28);
                         bola2PosY = 28;
 
@@ -284,7 +316,6 @@ public class App extends Application {
                     }
 
                     if (bolaCanon3.getCenterY() >= TAM_SCENE_Y) {
-                        bolaCanon3.setVisible(true);
                         bolaCanon3.setCenterY(28);
                         bola3PosY = 28;
 
@@ -398,7 +429,7 @@ public class App extends Application {
                     boolean colisionVaciaBola1 = colisionBola1.getBoundsInLocal().isEmpty();
 
                     if (colisionVaciaBola1 == false) {
-                        System.out.println("HA chocado con bola 1");
+                        System.out.println("Ha chocado con bola 1");
                         if (this.numVidasActual == 3) {
                             numVidas.setText("Vidas: 2");
                             this.numVidasActual--;
@@ -548,7 +579,6 @@ public class App extends Application {
 
                     boolean colisionVaciaFinPartida = colisionFinPartida.getBoundsInLocal().isEmpty();
 
-                    //HAY Q HACER QUE SI HA GANADAO NO ENTRE EN EL PRIMER IF
                     if (numVidasActual == 0 ) {
                         bolaCanon1.setVisible(false);
                         bolaCanon2.setVisible(false);
@@ -635,6 +665,9 @@ public class App extends Application {
         numVidasActual = 3;
 
     }
+    
+    
+    
     
 
     public static void main(String[] args) {
