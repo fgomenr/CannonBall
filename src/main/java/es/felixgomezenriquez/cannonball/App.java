@@ -1,7 +1,5 @@
 package es.felixgomezenriquez.cannonball;
 
-
-
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
@@ -22,12 +20,9 @@ import javafx.scene.text.Text;
 import javafx.stage.Stage;
 import javafx.util.Duration;
 
-
 public class App extends Application {
-    
+
     //La mayoria de variables declaradas aqui son para su posterior uso dentro del timeline
-
-
     Pane root = new Pane();
     final int TAM_SCENE_X = 640;
     final int TAM_SCENE_Y = 480;
@@ -59,35 +54,27 @@ public class App extends Application {
 
     //Variables numero de vidas 
     int numVidasActual = 3;
-    
+
     // texto cantidad vidas
     Text numVidas = new Text("Vidas: 3");
-
 
     //Añadimos vidas a la pantalla 
     Image vidas = new Image(getClass().getResourceAsStream("/images/Heart.png"));
 
     ImageView vidasView[] = new ImageView[3];
-    
+
     //Variable control Juego 
-    
     boolean controlVictoria;
-    
+
     //Creamos layout de vitoria
-    
     HBox layoutGanado = new HBox();
-    
+
     //Creamos layout de derrota
-    
     HBox layoutPerdido = new HBox();
-
-
 
     @Override
     public void start(Stage stage) throws InterruptedException {
-        
-        
-        
+
         stage.setTitle("CannonBallRun");
         scene.setFill(Color.BLACK);
         stage.setScene(scene);
@@ -95,7 +82,6 @@ public class App extends Application {
         stage.show();
 
         //Añadimos imagenes a la pantalla
-        
         //Añadimos fondo
         Image backGround = new Image(getClass().getResourceAsStream("/images/full-background.png"));
 
@@ -106,12 +92,10 @@ public class App extends Application {
         bgView.setFitWidth(1000);
 
         root.getChildren().add(bgView);
-        
-        
+
         //Añadimos la flecha que indica el camino a seguir
-        
         Image flecha = new Image(getClass().getResourceAsStream("/images/rodyk.png"));
-        
+
         ImageView flechaView = new ImageView(flecha);
         flechaView.setFitHeight(50);
         flechaView.setFitWidth(50);
@@ -119,13 +103,10 @@ public class App extends Application {
         flechaView.setY(230);
         flechaView.setRotate(180);
         root.getChildren().add(flechaView);
-        
-        
 
         //Añadimos cañones 
-        
         Image cannon = new Image(getClass().getResourceAsStream("/images/turret.png"));
-        
+
         ImageView cannonView = new ImageView(cannon);
         cannonView.setFitHeight(50);
         cannonView.setFitWidth(50);
@@ -148,9 +129,8 @@ public class App extends Application {
         cannon3.setY(-24);
         cannon3.setRotate(90);
         root.getChildren().add(cannon3);
-        
-        //Añadimos las vidas 
 
+        //Añadimos las vidas 
         for (int i = 0; i <= 2; i++) {
 
             vidasView[i] = new ImageView(vidas);
@@ -163,7 +143,6 @@ public class App extends Application {
         vidasView[1].setX(575);
         vidasView[2].setX(600);
 
-        
         //Creamos layout para el reinicio
         HBox layoutReset = new HBox();
         layoutReset.setTranslateY(50);
@@ -174,12 +153,10 @@ public class App extends Application {
         Text reset = new Text("Presione 'R' para reinicar la partida ");
         reset.setFont(Font.font(15));
         reset.setFill(Color.rgb(208, 136, 0));
-        
+
         //Anadimos los textos al layout
         layoutReset.getChildren().add(reset);
-        
-        
-        
+
         //Creamos layout para las vidas
         HBox layoutVidas = new HBox();
         layoutVidas.setTranslateY(45);
@@ -191,8 +168,6 @@ public class App extends Application {
 
         //Anadimos los textos al layout
         layoutVidas.getChildren().add(numVidas);
-        
-        
 
         //Creamos layout para HAS GANADO
         layoutGanado.setTranslateY(170);
@@ -219,12 +194,8 @@ public class App extends Application {
 
         //Anadimos los textos al layout
         layoutPerdido.getChildren().add(hasPerdido);
-        
-        
-        
+
         //Creamos personaje
-        
-        
         Rectangle cuerpo = new Rectangle(10, 10, 35, 40);
         cuerpo.setFill(Color.GRAY);
         Rectangle pierna1 = new Rectangle(15, 50, 10, 10);
@@ -241,14 +212,11 @@ public class App extends Application {
         brazo2_1.setFill(Color.DARKGRAY);
         Circle ojo1 = new Circle(20, 21, 2.5, Color.WHITE);
         Circle ojo2 = new Circle(35, 21, 2.5, Color.WHITE);
-        
-        
 
         //Creamos Rectangulo para hacer colisiones con las bolas
         Rectangle colisionJugador = new Rectangle(10, 10, 35, 45);
         colisionJugador.setFill(Color.BLUE);
         colisionJugador.setVisible(false);
-        
 
         //Creamos Rectangulo para hacer colision al final de la partida
         Rectangle colisionFinJuego = new Rectangle(-15, 380, 50, 45);
@@ -271,7 +239,7 @@ public class App extends Application {
         personaje.setLayoutX(personajeX);
         personaje.setLayoutY(personajeY);
         personaje.getChildren().add(colisionJugador);
-        
+
         //Añadimos a la escena
         root.getChildren().add(personaje);
 
@@ -287,16 +255,10 @@ public class App extends Application {
         bolaCanon3.setVisible(true);
         root.getChildren().add(bolaCanon3);
 
-        
-
-        
         //Timeline encargado del tiro de los cañones 
-        
-        
-        
         Timeline tiroCanon = new Timeline(
                 new KeyFrame(Duration.seconds(0.017), (ActionEvent ae) -> {
-                    
+
                     if (bolaPosX >= TAM_SCENE_X) {
                         bolaPosX = 60;
 
@@ -304,8 +266,7 @@ public class App extends Application {
                         bolaPosX += velocidadBolaX;
                         bolaCanon1.setCenterX(bolaPosX);
                     }
-                    
-                    
+
                     if (bolaCanon2.getCenterY() >= TAM_SCENE_Y) {
                         bolaCanon2.setCenterY(28);
                         bola2PosY = 28;
@@ -329,12 +290,11 @@ public class App extends Application {
 
         tiroCanon.setCycleCount(Timeline.INDEFINITE);
         tiroCanon.play();
-   
 
         //Movimiento del personaje
         Timeline movimientoPersonaje = new Timeline(
                 new KeyFrame(Duration.seconds(0.017), (ActionEvent ae) -> {
-       
+
                     if (personajeY <= 315) {
 
                         velocidadPersonajeY = 2;
@@ -386,13 +346,11 @@ public class App extends Application {
                                 break;
                             case R:
                                 try {
-                                    this.reset();
-                                } catch (InterruptedException ex) {
-                                    ex.printStackTrace();
-                                }
-                            
+                                this.reset();
+                            } catch (InterruptedException ex) {
+                                ex.printStackTrace();
+                            }
 
-                                
                         }
                     });
 
@@ -410,16 +368,12 @@ public class App extends Application {
                                 break;
                         }
                     });
-                    
-                  
-                    
+
                 })
         );
         movimientoPersonaje.setCycleCount(Timeline.INDEFINITE);
         movimientoPersonaje.play();
 
-        
-        
         //Timeline colisiones y control de las vidas
         Timeline detectarColisionesControlVidas = new Timeline(
                 new KeyFrame(Duration.seconds(0.017), (ActionEvent ae) -> {
@@ -564,35 +518,29 @@ public class App extends Application {
         detectarColisionesControlVidas.setCycleCount(Timeline.INDEFINITE);
         detectarColisionesControlVidas.play();
 
-        
-        
-        
-        
-        
         //Timeline Control finalPartida
         Timeline controlPartida = new Timeline(
                 new KeyFrame(Duration.seconds(0.017), (ActionEvent ae) -> {
-                    
+
                     //detectar colision con la zona para ganar 
-                    
                     Shape colisionFinPartida = Shape.intersect(colisionJugador, colisionFinJuego);
 
                     boolean colisionVaciaFinPartida = colisionFinPartida.getBoundsInLocal().isEmpty();
 
-                    if (numVidasActual == 0 ) {
+                    if (numVidasActual == 0) {
                         bolaCanon1.setVisible(false);
                         bolaCanon2.setVisible(false);
                         bolaCanon3.setVisible(false);
                         velocidadBolaX = 0;
                         velocidadBola2Y = 0;
                         velocidadBola3Y = 0;
-                        velocidadPersonajeX=0;
-                        velocidadPersonajeY=0;
+                        velocidadPersonajeX = 0;
+                        velocidadPersonajeY = 0;
                         personajeX = 550;
                         personajeY = 380;
                         System.out.println("Has perdido");
                         layoutPerdido.setVisible(true);
-                        this.controlVictoria=false;
+                        this.controlVictoria = false;
 
                     } else if (colisionVaciaFinPartida == false) {
 
@@ -602,79 +550,65 @@ public class App extends Application {
                         velocidadBolaX = 0;
                         velocidadBola2Y = 0;
                         velocidadBola3Y = 0;
-                        velocidadPersonajeX=0;
-                        velocidadPersonajeY=0;
+                        velocidadPersonajeX = 0;
+                        velocidadPersonajeY = 0;
                         personajeX = 0;
                         personajeY = 380;
                         System.out.println("HAS GANADO");
                         layoutGanado.setVisible(true);
-                        this.controlVictoria=true;
+                        this.controlVictoria = true;
 
-                        
                     }
                 })
         );
 
         controlPartida.setCycleCount(Timeline.INDEFINITE);
         controlPartida.play();
-        
-        
-        
-        
-   
+
     }
+
     //Metodo para reiniciar el Juego
     public void reset() throws InterruptedException {
-        
+
         for (int i = 0; i <= 2; i++) {
-            
+
             vidasView[i].setVisible(true);
             System.out.println(i);
 
         }
-        
+
         layoutGanado.setVisible(false);
         layoutPerdido.setVisible(false);
         bolaCanon1.setVisible(true);
         bolaCanon2.setVisible(true);
         bolaCanon3.setVisible(true);
 
-
-        
         numVidas.setText("Vidas: 3");
 
         bolaPosX = 60;
         bolaPosY = 410;
         velocidadBolaX = 4;
 
-    
         bola2PosX = 182;
         bola2PosY = 28;
         velocidadBola2Y = 6;
-        
+
         bola3PosX = 432;
         bola3PosY = 28;
         velocidadBola3Y = 6;
 
-   
         personajeX = 550;
         personajeY = 380;
-        velocidadPersonajeX=0;
-        velocidadPersonajeY=0;
+        velocidadPersonajeX = 0;
+        velocidadPersonajeY = 0;
 
         numVidasActual = 3;
 
     }
-    
-    
-    
-    
 
     public static void main(String[] args) {
         launch();
 
     }
-
-    
 
 }
