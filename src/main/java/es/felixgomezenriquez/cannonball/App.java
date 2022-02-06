@@ -4,18 +4,16 @@ import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
-import javafx.geometry.HPos;
-import javafx.geometry.Insets;
-import javafx.geometry.VPos;
+import static javafx.geometry.HPos.LEFT;
 import javafx.scene.Group;
 import javafx.scene.Scene;
+import javafx.scene.control.Button;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
-import javafx.scene.input.KeyCode;
 import javafx.scene.input.KeyEvent;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Pane;
-import javafx.scene.layout.Region;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Circle;
 import javafx.scene.shape.Rectangle;
@@ -58,6 +56,10 @@ public class App extends Application {
 
     //Variables numero de vidas 
     int numVidasActual = 3;
+    
+    // texto cantidad vidas
+    Text numVidas = new Text("Vidas: 3");
+
 
     //Añadimos vidas a la pantalla 
     //Colocamos aqui para poder usarlo dentro del timeline 
@@ -67,7 +69,13 @@ public class App extends Application {
     
     //Variable control Juego 
     
-    boolean hasGanado;
+    boolean controlVictoria;
+    
+    HBox layoutGanado = new HBox();
+    
+    HBox layoutPerdido = new HBox();
+
+
     
     
     
@@ -131,43 +139,59 @@ public class App extends Application {
         vidasView[1].setX(575);
         vidasView[2].setX(600);
 
+        
+        //Creamos layout para el reinicio
+        HBox layoutReset = new HBox();
+        layoutReset.setTranslateY(50);
+        layoutReset.setTranslateX(195);
+        layoutReset.setVisible(true);
+        root.getChildren().add(layoutReset);
+
+        Text reset = new Text("Presione 'R' para reinicar la partida ");
+        reset.setFont(Font.font(15));
+        reset.setFill(Color.rgb(208, 136, 0));
+        
+        //Anadimos los textos a los layouts
+        layoutReset.getChildren().add(reset);
+        
+        
+        
         //Creamos layout para las vidas
         HBox layoutVidas = new HBox();
         layoutVidas.setTranslateY(45);
         layoutVidas.setTranslateX(535);
         root.getChildren().add(layoutVidas);
 
-        Text numVidas = new Text("Vidas: 3");
         numVidas.setFont(Font.font(24));
-        numVidas.setFill(Color.CORAL);
+        numVidas.setFill(Color.rgb(208, 136, 0));
 
         //Anadimos los textos a los layouts
         layoutVidas.getChildren().add(numVidas);
+        
+        
 
         //Creamos layout para HAS GANADO
-        HBox layoutGanado = new HBox();
-        layoutGanado.setTranslateY(200);
+        layoutGanado.setTranslateY(170);
         layoutGanado.setTranslateX(150);
         layoutGanado.setVisible(false);
         root.getChildren().add(layoutGanado);
 
         Text hasGanado = new Text("HAS GANADO! :)");
         hasGanado.setFont(Font.font(50));
-        hasGanado.setFill(Color.CORAL);
+        hasGanado.setFill(Color.rgb(114, 227, 83));
 
         //Anadimos los textos a los layouts
         layoutGanado.getChildren().add(hasGanado);
 
         //Creamos layout para HAS PERDIDO
-        HBox layoutPerdido = new HBox();
-        layoutPerdido.setTranslateY(200);
+        layoutPerdido.setTranslateY(170);
         layoutPerdido.setTranslateX(150);
         layoutPerdido.setVisible(false);
         root.getChildren().add(layoutPerdido);
 
         Text hasPerdido = new Text("HAS PERDIDO! :( ");
         hasPerdido.setFont(Font.font(50));
-        hasPerdido.setFill(Color.CORAL);
+        hasPerdido.setFill(Color.DARKCYAN);
 
         //Anadimos los textos a los layouts
         layoutPerdido.getChildren().add(hasPerdido);
@@ -279,7 +303,7 @@ public class App extends Application {
         //Movimiento del personaje
         Timeline movimientoPersonaje = new Timeline(
                 new KeyFrame(Duration.seconds(0.017), (ActionEvent ae) -> {
-
+       
                     if (personajeY <= 315) {
 
                         velocidadPersonajeY = 2;
@@ -329,6 +353,15 @@ public class App extends Application {
                                 velocidadPersonajeX = -3;
 
                                 break;
+                            case R:
+                                try {
+                                    this.reset();
+                                } catch (InterruptedException ex) {
+                                    ex.printStackTrace();
+                                }
+                            
+
+                                
                         }
                     });
 
@@ -346,6 +379,9 @@ public class App extends Application {
                                 break;
                         }
                     });
+                    
+                  
+                    
                 })
         );
         movimientoPersonaje.setCycleCount(Timeline.INDEFINITE);
@@ -526,7 +562,7 @@ public class App extends Application {
                         personajeY = 380;
                         System.out.println("Has perdido");
                         layoutPerdido.setVisible(true);
-                        this.hasGanado=false;
+                        this.controlVictoria=false;
 
                     } else if (colisionVaciaFinPartida == false) {
 
@@ -542,7 +578,7 @@ public class App extends Application {
                         personajeY = 380;
                         System.out.println("HAS GANADO");
                         layoutGanado.setVisible(true);
-                        this.hasGanado=true;
+                        this.controlVictoria=true;
 
                         
                     }
@@ -555,15 +591,50 @@ public class App extends Application {
         
         
         
-        //Timeline reinicio de partida
-        
-        
-        
-
-
-        
+   
     }
+    //Metodo para reiniciar el Juego
+    public void reset() throws InterruptedException {
+        
+        for (int i = 0; i <= 2; i++) {
+            
+            vidasView[i].setVisible(true);
+            System.out.println(i);
+
+        }
+        
+        layoutGanado.setVisible(false);
+        layoutPerdido.setVisible(false);
+        bolaCanon1.setVisible(true);
+        bolaCanon2.setVisible(true);
+        bolaCanon3.setVisible(true);
+
+
+        
+        numVidas.setText("Vidas: 3");
+
+        bolaPosX = 60;
+        bolaPosY = 410;
+        velocidadBolaX = 4;
+
     
+        bola2PosX = 182;
+        bola2PosY = 28;
+        velocidadBola2Y = 6;
+        
+        bola3PosX = 432;
+        bola3PosY = 28;
+        velocidadBola3Y = 6;
+
+   
+        personajeX = 550;
+        personajeY = 380;
+        velocidadPersonajeX=0;
+        velocidadPersonajeY=0;
+
+        numVidasActual = 3;
+
+    }
     
 
     public static void main(String[] args) {
